@@ -13,7 +13,7 @@ GPT Image Captioner is a web app that generates high-quality image captions usin
 ## Tech Stack
 
 - **Framework**: [Next.js 14](https://nextjs.org/)
-- **UI Components**: [shadcn/ui](https://shadcn.dev/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
 - **Styling**: [TailwindCSS](https://tailwindcss.com/)
 - **Icons**: [Lucide-react](https://lucide.dev/)
 - **API**: OpenAI API
