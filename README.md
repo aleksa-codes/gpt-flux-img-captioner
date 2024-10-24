@@ -2,6 +2,10 @@
 
 GPT Image Captioner is a web app that generates high-quality image captions using the OpenAI API. This tool is designed for users who want to streamline the dataset preparation process, especially when working with LoRA model training platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) or [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
 
+## Demo
+
+Visit [GPT Image Captioner](https://gptcaptioner.aleksa.io/) to try the app live!
+
 ## Features
 
 - Upload images to generate detailed captions.
@@ -23,7 +27,7 @@ GPT Image Captioner is a web app that generates high-quality image captions usin
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/gpt-image-captioner.git
+   git clone https://github.com/aleksa-codes/gpt-flux-img-captioner.git
    cd gpt-image-captioner
    ```
 
