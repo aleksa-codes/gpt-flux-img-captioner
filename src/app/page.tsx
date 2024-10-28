@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2Icon, DownloadIcon, ScanEyeIcon, ImageIcon, FileTextIcon } from 'lucide-react';
+import { Loader2Icon, DownloadIcon, ScanEyeIcon, ImageIcon, FileTextIcon, KeyIcon } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -158,12 +158,11 @@ export default function Home() {
           ></path>
         </svg>
       </Link>
-      <div className='flex w-full flex-row justify-end p-4 pb-0'>
-        <ThemeToggle />
-      </div>
       <main className='container mx-auto max-w-3xl px-4 py-8'>
-        <APIKeyManager onApiKeyChange={setApiKey} />
-
+        <div className='mb-8 flex w-full flex-row justify-end gap-4'>
+          <APIKeyManager onApiKeyChange={setApiKey} />
+          <ThemeToggle />
+        </div>
         <div className='mb-8 space-y-2 text-center'>
           <div className='flex items-center justify-center space-x-3'>
             <ScanEyeIcon className='h-10 w-10 text-blue-500' />
@@ -258,11 +257,16 @@ export default function Home() {
                 </div>
               </CardContent>
             </Card>
-            <Button type='submit' className='w-full' size='lg' disabled={loading}>
+            <Button type='submit' className='w-full' size='lg' disabled={loading || !apiKey}>
               {loading ? (
                 <>
                   <Loader2Icon className='mr-2 h-5 w-5 animate-spin' />
                   Processing Images...
+                </>
+              ) : !apiKey ? (
+                <>
+                  <KeyIcon className='mr-2 h-5 w-5' />
+                  API Key Required
                 </>
               ) : (
                 <>
