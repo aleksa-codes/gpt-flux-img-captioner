@@ -1,10 +1,20 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ShieldQuestionIcon, KeyIcon, TrashIcon, SaveIcon } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
+import { ShieldQuestionIcon, KeyIcon, TrashIcon, SaveIcon, CheckCircleIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 interface APIKeyManagerProps {
   onApiKeyChange: (key: string) => void;
@@ -22,7 +32,7 @@ export default function APIKeyManager({
   localStorageKey = 'api-key',
   apiKeyPattern = /^sk-[\w-]{20,42}T3BlbkFJ[\w-]{20,42}$/,
   label = 'OpenAI API Key',
-  description = 'Please remove your API key after you are done using the app.',
+  description = 'Please remove your API key when you are done using the app for security reasons.',
   tooltipText = "Your API key is securely stored in the browser's local storage and is only utilized when making requests to OpenAI via their official SDK.",
   saveButtonText = 'Save API Key',
   removeButtonText = 'Remove Key',
@@ -30,6 +40,7 @@ export default function APIKeyManager({
   const [apiKey, setApiKey] = useState('');
   const [isKeySet, setIsKeySet] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | '' }>({ text: '', type: '' });
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const storedApiKey = localStorage.getItem(localStorageKey);
@@ -66,56 +77,72 @@ export default function APIKeyManager({
   };
 
   return (
-    <Card className='fixed bottom-4 right-4 z-50 w-96 shadow-lg'>
-      <CardHeader className='space-y-1 pb-4'>
-        <CardTitle className='flex items-center gap-2'>
-          <KeyIcon className='h-5 w-5 text-primary' />
-          <span>{label}</span>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <ShieldQuestionIcon className='ml-1 h-4 w-4 cursor-help text-muted-foreground transition-colors hover:text-primary' />
-              </TooltipTrigger>
-              <TooltipContent side='left' className='max-w-xs'>
-                <p className='text-sm'>{tooltipText}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </CardTitle>
-        <CardDescription className='text-sm'>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-4'>
-        <div className='relative space-y-2'>
-          <div className='flex rounded-md shadow-sm'>
-            <Input
-              type='password'
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder='sk-aBC123xyz...'
-              disabled={isKeySet}
-              className='pr-4'
-            />
-          </div>
-          {message.text && (
-            <Alert variant={message.type === 'success' ? 'default' : 'destructive'}>
-              <AlertDescription className='text-sm'>{message.text}</AlertDescription>
-            </Alert>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant={isKeySet ? 'outline' : 'default'}>
+          {isKeySet ? (
+            <>
+              <CheckCircleIcon className='mr-2 h-4 w-4 text-green-500' />
+              API Key Set
+            </>
+          ) : (
+            <>
+              <KeyIcon className='mr-2 h-4 w-4' />
+              Set API Key
+            </>
           )}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-[425px]'>
+        <DialogHeader>
+          <DialogTitle className='flex items-center gap-2'>
+            <span>{label}</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <ShieldQuestionIcon className='size-5 cursor-help text-blue-500 transition-colors hover:text-primary' />
+                </TooltipTrigger>
+                <TooltipContent side='top' className='max-w-xs'>
+                  <p className='text-sm'>{tooltipText}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </DialogTitle>
+          <DialogDescription className='text-sm'>{description}</DialogDescription>
+        </DialogHeader>
+        <div className='grid gap-4 py-4'>
+          <div className='relative space-y-2'>
+            <div className='flex rounded-md shadow-sm'>
+              <Input
+                type='password'
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder='sk-aBC123xyz...'
+                disabled={isKeySet}
+                className='pr-4'
+              />
+            </div>
+            {message.text && (
+              <Alert variant={message.type === 'success' ? 'default' : 'destructive'}>
+                <AlertDescription className='text-sm'>{message.text}</AlertDescription>
+              </Alert>
+            )}
+          </div>
         </div>
-      </CardContent>
-      <CardFooter>
-        {!isKeySet ? (
-          <Button onClick={handleSaveApiKey} className='w-full' variant='default'>
-            <SaveIcon className='mr-2 h-4 w-4' />
-            {saveButtonText}
-          </Button>
-        ) : (
-          <Button onClick={handleRemoveApiKey} className='w-full' variant='destructive'>
-            <TrashIcon className='mr-2 h-4 w-4' />
-            {removeButtonText}
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+        <DialogFooter className='flex flex-col space-y-2'>
+          {!isKeySet ? (
+            <Button onClick={handleSaveApiKey} className='w-full' variant='default'>
+              <SaveIcon className='mr-2 h-4 w-4' />
+              {saveButtonText}
+            </Button>
+          ) : (
+            <Button onClick={handleRemoveApiKey} className='w-full' variant='destructive'>
+              <TrashIcon className='mr-2 h-4 w-4' />
+              {removeButtonText}
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
