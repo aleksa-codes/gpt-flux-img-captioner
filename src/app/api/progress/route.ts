@@ -12,7 +12,7 @@ const formatCaption = (caption: string, prefix: string, suffix: string): string 
   if (formattedCaption.endsWith('.')) {
     formattedCaption = formattedCaption.slice(0, -1);
   }
-  console.log(formattedCaption);
+
   const prefixPart = trimmedPrefix ? `${trimmedPrefix}, ` : '';
   const suffixPart = trimmedSuffix ? `, ${trimmedSuffix}` : '';
   return `${prefixPart}${formattedCaption}${suffixPart}`;
