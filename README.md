@@ -1,28 +1,36 @@
-# GPT Image Captioner
+# GPT Image Captioner 🖼️
 
-GPT Image Captioner is a web app that generates high-quality image captions using the OpenAI API. This tool is designed for users who want to streamline the dataset preparation process, especially when working with LoRA model training platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) or [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
+GPT Image Captioner is a web app that generates high-quality image captions using the OpenAI API. Designed for users who want to streamline dataset preparation, it's especially useful for those working with LoRA model training platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) and [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
 
-## Demo
+## 🌐 Demo
 
-Visit [GPT Image Captioner](https://gptcaptioner.aleksa.io/) to try the app live!
+Try it live at [GPT Image Captioner](https://gptcaptioner.aleksa.io/)!
 
-## Features
+## ✨ Features
 
-- Upload images to generate detailed captions.
-- Supports optional prefix and suffix to customize captions.
-- Outputs captions in a downloadable ZIP file.
-- API key management for secure usage of the OpenAI API.
-- Supports multiple image uploads and real-time captioning progress.
+- **Image Captioning**: Upload images to generate detailed captions.
+- **Customizable Captions**: Add prefix and suffix options to tailor captions.
+- **Batch Processing**: Supports multiple image uploads with real-time progress.
+- **Downloadable Captions**: Get all captions as a ZIP file.
+- **API Key Management**: Securely store and manage your OpenAI API key within the app.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/)
-- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Styling**: [TailwindCSS](https://tailwindcss.com/)
-- **Icons**: [Lucide-react](https://lucide.dev/)
-- **API**: OpenAI API
+- **Framework**: Next.js 14
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Icons**: Lucide React
+- **API Integration**: OpenAI API
 
-## Installation
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- Yarn package manager
+- OpenAI API key (optional for development, can also be added within the app)
+
+### Installation
 
 1. Clone the repository:
 
@@ -37,37 +45,53 @@ Visit [GPT Image Captioner](https://gptcaptioner.aleksa.io/) to try the app live
    yarn install
    ```
 
-3. Create a `.env` file and add your OpenAI API key (not required, you can add it inside the app):
+3. Create a `.env` file to add your OpenAI API key (optional; the key can also be added in-app):
 
    ```bash
    OPENAI_API_KEY=your-api-key
    ```
 
-4. Run the development server:
+4. Start the development server:
 
    ```bash
    yarn dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-## Usage
+## 💡 Usage
 
-1. Upload one or more images that you want to generate captions for.
-2. Optionally provide a prefix and/or suffix to customize the caption format.
-3. Click the "Generate Captions" button.
-4. Once the captions are ready, they will be listed on the page, and you can download all captions as a ZIP file.
+1. **Upload Images**: Add one or multiple images to generate captions.
+2. **Customize Captions**: Optionally add a prefix and/or suffix for caption styling.
+3. **Generate Captions**: Click "Generate Captions" to process images.
+4. **Download Captions**: Once generated, download all captions as a ZIP file.
 
-### API Key Management
+### 🔑 API Key Management
 
-- Use the **API Key Manager** to securely store your OpenAI API key in the browser's local storage.
-- The API key will be used to interact with OpenAI API.
-- You can add, remove, or update the key as needed.
+- Use the in-app **API Key Manager** to securely store your OpenAI API key in local storage.
+- This key enables seamless interaction with the OpenAI API.
+- You can add, update, or remove the key as needed.
 
-## Contributing
+## 🤝 Contributing
 
-Feel free to submit issues or pull requests for improvements or bug fixes. Make sure to follow best practices and write clear commit messages.
+Contributions are welcome! Here’s how to get involved:
 
-## License
+1. Fork the repository.
+2. Create your feature branch: `git checkout -b feature/AmazingFeature`.
+3. Commit your changes: `git commit -m 'Add AmazingFeature'`.
+4. Push to the branch: `git push origin feature/AmazingFeature`.
+5. Open a Pull Request.
 
-This project is licensed under the MIT License.
+### Development Guidelines
+
+- Follow the existing code style and conventions.
+- Write meaningful commit messages.
+- Test changes thoroughly and update documentation as needed.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">Made with ❤️ by <a href="https://github.com/aleksa-codes">aleksa.codes</a></p>
