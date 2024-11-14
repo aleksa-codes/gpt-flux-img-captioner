@@ -46,8 +46,9 @@ export default function Home() {
     defaultValues: {
       prefix: '',
       suffix: '',
-      systemMessage: 'Generate a detailed comma-separated caption that will be used for AI image generation.',
-      userPrompt: 'Describe this image in detail, focusing on the main elements, style, and composition.',
+      systemMessage:
+        'Generate a concise, yet detailed comma-separated caption. Do not use markdown. Do not have an intro or outro.',
+      userPrompt: 'Describe this image, focusing on the main elements, style, and composition.',
       model: 'gpt-4o-mini',
       detail: 'auto',
     },

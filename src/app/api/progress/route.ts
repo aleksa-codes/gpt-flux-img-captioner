@@ -6,22 +6,22 @@ import path from 'path';
 export const maxDuration = 60;
 
 const formatCaption = (caption: string, prefix: string, suffix: string): string => {
-  const trimmedPrefix = prefix.trim().replace(/^,/, '').replace(/,$/, '');
-  const trimmedSuffix = suffix.trim().replace(/^,/, '').replace(/,$/, '');
+  // remove trailing comma from prefix
+  const trimmedPrefix = prefix.trim().replace(/,$/, '');
+  // remove leading comma from suffix
+  const trimmedSuffix = suffix.trim().replace(/^,/, '');
 
-  // Clean up the caption: remove newlines, multiple spaces, and trailing period
-  let formattedCaption = caption
-    .replace(/\n/g, ' ') // Replace newlines with spaces
-    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-    .trim(); // Remove leading/trailing spaces
+  // lowercase the first letter
+  caption = caption.charAt(0).toLowerCase() + caption.slice(1);
+  // remove trailing period
+  caption = caption.replace(/\.$/, '');
 
-  if (formattedCaption.endsWith('.')) {
-    formattedCaption = formattedCaption.slice(0, -1);
-  }
-
+  // format prefix and suffix
   const prefixPart = trimmedPrefix ? `${trimmedPrefix}, ` : '';
   const suffixPart = trimmedSuffix ? `, ${trimmedSuffix}` : '';
-  return `${prefixPart}${formattedCaption}${suffixPart}`;
+
+  // remove newlines and multiple spaces
+  return `${prefixPart}${caption}${suffixPart}`.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
 };
 
 export async function POST(req: NextRequest) {
@@ -31,10 +31,10 @@ export async function POST(req: NextRequest) {
   const suffix = (formData.get('suffix') as string) || '';
   const systemMessage =
     (formData.get('systemMessage') as string) ||
-    'Generate a detailed comma-separated caption that will be used for AI image generation.';
+    'Generate a concise, yet detailed comma-separated caption. Do not use markdown. Do not have an intro or outro.';
   const userPrompt =
     (formData.get('userPrompt') as string) ||
-    'Describe this image in detail, focusing on the main elements, style, and composition.';
+    'Describe this image, focusing on the main elements, style, and composition.';
   const model = (formData.get('model') as string) || 'gpt-4o-mini';
   const detail = (formData.get('detail') as string) || 'auto';
   const apiKey = (formData.get('apiKey') as string) || process.env['OPENAI_API_KEY'];
