@@ -30,7 +30,7 @@ interface APIKeyManagerProps {
 export default function APIKeyManager({
   onApiKeyChange,
   localStorageKey = 'api-key',
-  apiKeyPattern = /^sk-[\w-]{20,42}T3BlbkFJ[\w-]{20,42}$/,
+  apiKeyPattern = /^sk-[a-zA-Z0-9-_]{1,250}$/,
   label = 'OpenAI API Key',
   description = 'Please remove your API key when you are done using the app for security reasons.',
   tooltipText = "Your API key is securely stored in the browser's local storage and is only utilized when making requests to OpenAI via their official SDK.",

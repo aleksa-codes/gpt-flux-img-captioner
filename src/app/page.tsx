@@ -14,11 +14,21 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import APIKeyManager from '@/components/api-key-manager';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Textarea } from '@/components/ui/textarea';
+import { ChevronDownIcon, ChevronUpIcon, WrenchIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { InfoIcon } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const formSchema = z.object({
   images: z.array(z.instanceof(File)).nonempty('At least one image is required.'),
   prefix: z.string().optional(),
   suffix: z.string().optional(),
+  systemMessage: z.string().optional(),
+  userPrompt: z.string().optional(),
+  model: z.enum(['gpt-4o-mini', 'gpt-4o']),
+  detail: z.enum(['auto', 'low', 'high']),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -29,12 +39,17 @@ export default function Home() {
   const [captions, setCaptions] = useState<{ filename: string; content: string }[]>([]);
   const [apiKey, setApiKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       prefix: '',
       suffix: '',
+      systemMessage: 'Generate a detailed comma-separated caption that will be used for AI image generation.',
+      userPrompt: 'Describe this image in detail, focusing on the main elements, style, and composition.',
+      model: 'gpt-4o-mini',
+      detail: 'auto',
     },
   });
 
@@ -55,6 +70,10 @@ export default function Home() {
     }
     formData.append('prefix', data.prefix || '');
     formData.append('suffix', data.suffix || '');
+    formData.append('systemMessage', data.systemMessage || '');
+    formData.append('userPrompt', data.userPrompt || '');
+    formData.append('model', data.model || '');
+    formData.append('detail', data.detail || '');
 
     if (apiKey) {
       formData.append('apiKey', apiKey);
@@ -233,10 +252,26 @@ export default function Home() {
                     name='prefix'
                     render={({ field }) => (
                       <FormItem className='flex-1'>
-                        <FormLabel>Caption Prefix</FormLabel>
+                        <div className='flex items-center gap-2'>
+                          <FormLabel>Caption Prefix</FormLabel>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                              </TooltipTrigger>
+                              <TooltipContent className='max-w-[300px]'>
+                                <p>
+                                  Text to add at the beginning of each caption. Commas and spaces will be handled
+                                  automatically, so you can just enter the text.
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                         <FormControl>
                           <Input {...field} placeholder='Optional prefix...' />
                         </FormControl>
+                        <p className='mt-1 text-xs text-muted-foreground'>Example: "CYBRPNK style"</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -246,15 +281,192 @@ export default function Home() {
                     name='suffix'
                     render={({ field }) => (
                       <FormItem className='flex-1'>
-                        <FormLabel>Caption Suffix</FormLabel>
+                        <div className='flex items-center gap-2'>
+                          <FormLabel>Caption Suffix</FormLabel>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                              </TooltipTrigger>
+                              <TooltipContent className='max-w-[300px]'>
+                                <p>
+                                  Text to add at the end of each caption. Commas and spaces will be handled
+                                  automatically, so you can just enter the text.
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                         <FormControl>
                           <Input {...field} placeholder='Optional suffix...' />
                         </FormControl>
+                        <p className='mt-1 text-xs text-muted-foreground'>Example: "high quality 8k"</p>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
+                <Collapsible open={isOpen} onOpenChange={setIsOpen} className='mt-4'>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='outline' className='flex w-full items-center justify-between'>
+                      <div className='flex items-center gap-2'>
+                        <WrenchIcon className='h-4 w-4' />
+                        <span>Advanced Settings</span>
+                      </div>
+                      {isOpen ? <ChevronUpIcon className='h-4 w-4' /> : <ChevronDownIcon className='h-4 w-4' />}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className='mt-4 space-y-4'>
+                    <div className='rounded-lg border bg-muted/50 p-4'>
+                      <p className='text-sm text-muted-foreground'>
+                        These settings control how GPT generates captions for your images. Hover over the{' '}
+                        <InfoIcon className='inline h-3 w-3' /> icons for more details.
+                      </p>
+                    </div>
+                    <div className='flex gap-4'>
+                      <FormField
+                        control={form.control}
+                        name='model'
+                        render={({ field }) => (
+                          <FormItem className='flex-1'>
+                            <div className='flex items-center gap-2'>
+                              <FormLabel>Model</FormLabel>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                  </TooltipTrigger>
+                                  <TooltipContent className='max-w-[300px]'>
+                                    <p>
+                                      GPT-4o-mini is faster and cheaper, while GPT-4o provides more detailed and
+                                      accurate captions.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder='Select model' />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value='gpt-4o-mini'>GPT-4o-mini (Faster/Cheaper)</SelectItem>
+                                <SelectItem value='gpt-4o'>GPT-4o (Better Quality)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='detail'
+                        render={({ field }) => (
+                          <FormItem className='flex-1'>
+                            <div className='flex items-center gap-2'>
+                              <FormLabel>Detail Level</FormLabel>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                  </TooltipTrigger>
+                                  <TooltipContent className='max-w-[300px]'>
+                                    <p>
+                                      Controls how detailed the image analysis should be. Higher detail means more
+                                      tokens used but better analysis.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder='Select detail level' />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value='auto'>Auto (Recommended)</SelectItem>
+                                <SelectItem value='low'>Low (Faster)</SelectItem>
+                                <SelectItem value='high'>High (More Detailed)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name='systemMessage'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex items-center gap-2'>
+                            <FormLabel>System Message</FormLabel>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                </TooltipTrigger>
+                                <TooltipContent className='max-w-[300px]'>
+                                  <p>The system message sets the overall behavior and format of the AI.</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder='Enter system message...'
+                              className='min-h-[80px] resize-y font-mono text-sm'
+                            />
+                          </FormControl>
+                          <p className='mt-1 text-xs text-muted-foreground'>
+                            Defines how the AI should approach the caption generation task
+                          </p>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='userPrompt'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex items-center gap-2'>
+                            <FormLabel>User Prompt</FormLabel>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                </TooltipTrigger>
+                                <TooltipContent className='max-w-[300px]'>
+                                  <p>
+                                    The user prompt is sent along with each image. It specifies what aspects of the
+                                    image you want the AI to focus on.
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder='Enter user prompt...'
+                              className='min-h-[80px] resize-y font-mono text-sm'
+                            />
+                          </FormControl>
+                          <p className='mt-1 text-xs text-muted-foreground'>
+                            Specific instructions for analyzing each image
+                          </p>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CollapsibleContent>
+                </Collapsible>
               </CardContent>
             </Card>
             <Button type='submit' className='w-full' size='lg' disabled={loading || !apiKey}>
