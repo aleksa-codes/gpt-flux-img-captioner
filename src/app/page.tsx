@@ -271,7 +271,7 @@ export default function Home() {
                         <FormControl>
                           <Input {...field} placeholder='Optional prefix...' />
                         </FormControl>
-                        <p className='mt-1 text-xs text-muted-foreground'>Example: "CYBRPNK style"</p>
+                        <p className='mt-1 text-xs text-muted-foreground'>Example: &quot;CYBRPNK style&quot;</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -300,7 +300,7 @@ export default function Home() {
                         <FormControl>
                           <Input {...field} placeholder='Optional suffix...' />
                         </FormControl>
-                        <p className='mt-1 text-xs text-muted-foreground'>Example: "high quality 8k"</p>
+                        <p className='mt-1 text-xs text-muted-foreground'>Example: &quot;high quality 8k&quot;</p>
                         <FormMessage />
                       </FormItem>
                     )}
