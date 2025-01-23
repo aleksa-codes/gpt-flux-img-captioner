@@ -100,7 +100,7 @@ export default function APIKeyManager({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <ShieldQuestionIcon className='size-5 cursor-help text-blue-500 transition-colors hover:text-primary' />
+                  <ShieldQuestionIcon className='hover:text-primary size-5 cursor-help text-blue-500 transition-colors' />
                 </TooltipTrigger>
                 <TooltipContent side='top' className='max-w-xs'>
                   <p className='text-sm'>{tooltipText}</p>
