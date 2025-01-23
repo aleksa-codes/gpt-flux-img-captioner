@@ -150,7 +150,7 @@ export default function Home() {
   };
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='bg-background min-h-screen'>
       <Link
         href='https://github.com/aleksa-codes/gpt-flux-img-captioner'
         target='_blank'
@@ -162,7 +162,7 @@ export default function Home() {
           width='80'
           height='80'
           viewBox='0 0 250 250'
-          className='absolute left-0 top-0 scale-x-[-1] fill-foreground text-background'
+          className='fill-foreground text-background absolute top-0 left-0 scale-x-[-1]'
           aria-hidden='true'
         >
           <path d='M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z'></path>
@@ -188,7 +188,7 @@ export default function Home() {
             <ScanEyeIcon className='h-10 w-10 text-blue-500' />
             <h1 className='text-2xl font-bold tracking-tight sm:text-4xl'>GPT Image Captioner</h1>
           </div>
-          <p className='text-lg text-muted-foreground'>Generate AI-powered captions for your images</p>
+          <p className='text-muted-foreground text-lg'>Generate AI-powered captions for your images</p>
         </div>
         <Card className='mb-6'>
           <CardHeader>
@@ -235,7 +235,7 @@ export default function Home() {
                         <Input
                           type='file'
                           accept='image/*'
-                          className='h-14 file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary-foreground hover:cursor-pointer hover:file:cursor-pointer hover:file:bg-primary/90'
+                          className='file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 h-14 file:mr-4 file:rounded-lg file:border-0 file:px-4 file:py-2 file:text-sm file:font-medium hover:cursor-pointer hover:file:cursor-pointer'
                           multiple
                           onChange={(e) => {
                             const files = e.target.files ? Array.from(e.target.files) : [];
@@ -258,7 +258,7 @@ export default function Home() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                               </TooltipTrigger>
                               <TooltipContent className='max-w-[300px]'>
                                 <p>
@@ -272,7 +272,7 @@ export default function Home() {
                         <FormControl>
                           <Input {...field} placeholder='Optional prefix...' />
                         </FormControl>
-                        <p className='mt-1 text-xs text-muted-foreground'>Example: &quot;CYBRPNK style&quot;</p>
+                        <p className='text-muted-foreground mt-1 text-xs'>Example: &quot;CYBRPNK style&quot;</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -287,7 +287,7 @@ export default function Home() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                               </TooltipTrigger>
                               <TooltipContent className='max-w-[300px]'>
                                 <p>
@@ -301,7 +301,7 @@ export default function Home() {
                         <FormControl>
                           <Input {...field} placeholder='Optional suffix...' />
                         </FormControl>
-                        <p className='mt-1 text-xs text-muted-foreground'>Example: &quot;high quality 8k&quot;</p>
+                        <p className='text-muted-foreground mt-1 text-xs'>Example: &quot;high quality 8k&quot;</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -318,8 +318,8 @@ export default function Home() {
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent className='mt-4 space-y-4'>
-                    <div className='rounded-lg border bg-muted/50 p-4'>
-                      <p className='text-sm text-muted-foreground'>
+                    <div className='bg-muted/50 rounded-lg border p-4'>
+                      <p className='text-muted-foreground text-sm'>
                         These settings control how GPT generates captions for your images. Hover over the{' '}
                         <InfoIcon className='inline h-3 w-3' /> icons for more details.
                       </p>
@@ -335,7 +335,7 @@ export default function Home() {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                    <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                                   </TooltipTrigger>
                                   <TooltipContent className='max-w-[300px]'>
                                     <p>
@@ -371,7 +371,7 @@ export default function Home() {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                    <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                                   </TooltipTrigger>
                                   <TooltipContent className='max-w-[300px]'>
                                     <p>
@@ -409,7 +409,7 @@ export default function Home() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                  <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                                 </TooltipTrigger>
                                 <TooltipContent className='max-w-[300px]'>
                                   <p>The system message sets the overall behavior and format of the AI.</p>
@@ -424,7 +424,7 @@ export default function Home() {
                               className='min-h-[80px] resize-y font-mono text-sm'
                             />
                           </FormControl>
-                          <p className='mt-1 text-xs text-muted-foreground'>
+                          <p className='text-muted-foreground mt-1 text-xs'>
                             Defines how the AI should approach the caption generation task
                           </p>
                           <FormMessage />
@@ -441,7 +441,7 @@ export default function Home() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <InfoIcon className='h-4 w-4 cursor-help text-muted-foreground hover:text-primary' />
+                                  <InfoIcon className='text-muted-foreground hover:text-primary h-4 w-4 cursor-help' />
                                 </TooltipTrigger>
                                 <TooltipContent className='max-w-[300px]'>
                                   <p>
@@ -459,7 +459,7 @@ export default function Home() {
                               className='min-h-[80px] resize-y font-mono text-sm'
                             />
                           </FormControl>
-                          <p className='mt-1 text-xs text-muted-foreground'>
+                          <p className='text-muted-foreground mt-1 text-xs'>
                             Specific instructions for analyzing each image
                           </p>
                           <FormMessage />
@@ -515,8 +515,8 @@ export default function Home() {
                 <ul className='space-y-3'>
                   {captions.map((caption, index) => (
                     <li key={index} className='flex flex-col gap-1'>
-                      <span className='text-sm font-medium text-primary'>{caption.filename}</span>
-                      <span className='text-sm text-muted-foreground'>{caption.content}</span>
+                      <span className='text-primary text-sm font-medium'>{caption.filename}</span>
+                      <span className='text-muted-foreground text-sm'>{caption.content}</span>
                     </li>
                   ))}
                 </ul>
