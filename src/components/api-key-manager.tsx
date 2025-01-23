@@ -112,7 +112,7 @@ export default function APIKeyManager({
         </DialogHeader>
         <div className='grid gap-4 py-4'>
           <div className='relative space-y-2'>
-            <div className='flex rounded-md shadow-sm'>
+            <div className='flex rounded-md shadow-xs'>
               <Input
                 type='password'
                 value={apiKey}
