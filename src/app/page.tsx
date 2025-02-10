@@ -235,7 +235,7 @@ export default function Home() {
                         <Input
                           type='file'
                           accept='image/*'
-                          className='file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 h-14 file:mr-4 file:rounded-lg file:border-0 file:px-4 file:py-2 file:text-sm file:font-medium hover:cursor-pointer hover:file:cursor-pointer'
+                          className='file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 h-14 p-2 file:mr-4 file:h-full file:rounded-lg file:px-4 hover:cursor-pointer hover:file:cursor-pointer'
                           multiple
                           onChange={(e) => {
                             const files = e.target.files ? Array.from(e.target.files) : [];
