@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
-import OpenAI from 'openai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { createOllama } from 'ollama-ai-provider';
+import { generateText } from 'ai';
 import { Buffer } from 'buffer';
 import path from 'path';
 
@@ -35,11 +37,30 @@ export async function POST(req: NextRequest) {
   const userPrompt =
     (formData.get('userPrompt') as string) ||
     'Describe this image, focusing on the main elements, style, and composition.';
-  const model = (formData.get('model') as string) || 'gpt-4o-mini';
+
+  // Get service type and configuration
+  const service = (formData.get('service') as string) || 'openai';
+  const model = (formData.get('model') as string) || '';
   const detail = (formData.get('detail') as string) || 'auto';
   const apiKey = (formData.get('apiKey') as string) || process.env['OPENAI_API_KEY'];
+  const ollamaUrl = (formData.get('ollamaUrl') as string) + '/api' || 'http://localhost:11434/api';
 
-  const client = new OpenAI({ apiKey });
+  // Create the appropriate client based on service
+  let client: any;
+  if (service === 'ollama') {
+    client = createOllama({
+      baseURL: ollamaUrl,
+    });
+  } else {
+    // Default to OpenAI
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: 'OpenAI API key is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    client = createOpenAI({ apiKey, compatibility: 'strict' });
+  }
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -49,8 +70,8 @@ export async function POST(req: NextRequest) {
         const base64Image = Buffer.from(buffer).toString('base64');
 
         try {
-          const res = await client.chat.completions.create({
-            model: model,
+          const { text } = await generateText({
+            model: client(model),
             messages: [
               { role: 'system', content: systemMessage },
               {
@@ -58,10 +79,10 @@ export async function POST(req: NextRequest) {
                 content: [
                   { type: 'text', text: userPrompt },
                   {
-                    type: 'image_url',
-                    image_url: {
-                      url: `data:${image.type};base64,${base64Image}`,
-                      detail: detail as 'auto' | 'low' | 'high',
+                    type: 'image',
+                    image: `data:${image.type};base64,${base64Image}`,
+                    providerOptions: {
+                      openai: { imageDetail: detail as 'auto' | 'low' | 'high' },
                     },
                   },
                 ],
@@ -69,7 +90,7 @@ export async function POST(req: NextRequest) {
             ],
           });
 
-          let caption = res.choices[0].message.content || '';
+          let caption = text;
           const formattedCaption = formatCaption(caption, prefix, suffix);
           const txtFilename = `${path.parse(image.name).name}.txt`;
           controller.enqueue(`data: ${JSON.stringify({ filename: txtFilename, caption: formattedCaption })}\n\n`);

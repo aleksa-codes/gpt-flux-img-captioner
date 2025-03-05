@@ -1,96 +1,78 @@
 # GPT Image Captioner 🖼️
 
-GPT Image Captioner is a web app that generates high-quality image captions using the OpenAI API. Designed for users who want to streamline dataset preparation, it's especially useful for those working with LoRA model training platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) and [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
+A web app that generates AI-powered image captions. Ideal for LoRA model training on platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) and [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
 
-## 🌐 Demo
-
-Try it live at [GPT Image Captioner](https://gptcaptioner.aleksa.io/)!
+**[Live Demo](https://gptcaptioner.aleksa.io/)**
 
 ## ✨ Features
 
-- **Image Captioning**: Upload images to generate detailed captions.
-- **Customizable Captions**: Add prefix and suffix options to tailor captions.
-- **Batch Processing**: Supports multiple image uploads with real-time progress.
-- **Downloadable Captions**: Get all captions as a ZIP file.
-- **API Key Management**: Securely store and manage your OpenAI API key within the app.
+- **Dual Model Support**: OpenAI API (GPT-4o and GPT-4o-mini) or Ollama (local models)
+- **Batch Processing**: Upload and caption multiple images at once
+- **Customization**: Add prefix/suffix to captions
+- **Export**: Download all captions as a ZIP file
+- **API Key Management**: Securely store OpenAI keys in-app
+
+## 🧠 Model Options
+
+- **OpenAI**: GPT-4o (high-quality) and GPT-4o-mini (faster, cheaper)
+- **Ollama**: Local vision models (LLaVA, moondream, bakLLaVA), no API key needed
+
+> **Note**: When using the deployed web app with Ollama, you have several options:
+>
+> 1. Use [ngrok](https://ngrok.com/) to create a secure tunnel to your local Ollama server. [Learn more](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-use-ollama-with-ngrok).
+> 2. Configure Ollama to allow additional web origins using the `OLLAMA_ORIGINS` environment variable. [Learn more](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama) and check out [LobeHub's Ollama provider documentation](https://lobehub.com/docs/usage/providers/ollama).
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **Icons**: Lucide React
-- **API Integration**: OpenAI API
+Next.js 14, Tailwind CSS, shadcn/ui, Lucide React, Vercel AI SDK
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- Yarn package manager
-- OpenAI API key (optional for development, can also be added within the app)
+- Node.js (v16+)
+- Yarn
+- OpenAI API key (if using OpenAI)
+- Ollama installed locally (if using local models)
 
-### Installation
+### Install & Run
 
-1. Clone the repository:
+```bash
+# Clone repo
+git clone https://github.com/aleksa-codes/gpt-flux-img-captioner.git
+cd gpt-image-captioner
 
-   ```bash
-   git clone https://github.com/aleksa-codes/gpt-flux-img-captioner.git
-   cd gpt-image-captioner
-   ```
+# Install dependencies
+yarn install
 
-2. Install dependencies:
+# Start development server
+yarn dev
+```
 
-   ```bash
-   yarn install
-   ```
-
-3. Create a `.env` file to add your OpenAI API key (optional; the key can also be added in-app):
-
-   ```bash
-   OPENAI_API_KEY=your-api-key
-   ```
-
-4. Start the development server:
-
-   ```bash
-   yarn dev
-   ```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 💡 Usage
 
-1. **Upload Images**: Add one or multiple images to generate captions.
-2. **Customize Captions**: Optionally add a prefix and/or suffix for caption styling.
-3. **Generate Captions**: Click "Generate Captions" to process images.
-4. **Download Captions**: Once generated, download all captions as a ZIP file.
+1. Choose between OpenAI or Ollama
+2. Upload one or more images
+3. Add optional prefix/suffix
+4. Generate captions
+5. Download as ZIP
 
-### 🔑 API Key Management
+### Using Ollama
 
-- Use the in-app **API Key Manager** to securely store your OpenAI API key in local storage.
-- This key enables seamless interaction with the OpenAI API.
-- You can add, update, or remove the key as needed.
+1. [Install Ollama](https://ollama.com/download)
+2. Pull a vision model: `ollama pull llava`
+3. Start Ollama server
+4. Select "Ollama" in the app and choose your model
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here’s how to get involved:
-
-1. Fork the repository.
-2. Create your feature branch: `git checkout -b feature/AmazingFeature`.
-3. Commit your changes: `git commit -m 'Add AmazingFeature'`.
-4. Push to the branch: `git push origin feature/AmazingFeature`.
-5. Open a Pull Request.
-
-### Development Guidelines
-
-- Follow the existing code style and conventions.
-- Write meaningful commit messages.
-- Test changes thoroughly and update documentation as needed.
+Contributions welcome! Fork the repo, create a feature branch, and submit a pull request.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
