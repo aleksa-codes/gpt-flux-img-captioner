@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import JSZip from 'jszip';
 
-export const maxDuration = 60;
-
 export async function POST(req: NextRequest) {
   const { captions } = await req.json();
   const zip = new JSZip();

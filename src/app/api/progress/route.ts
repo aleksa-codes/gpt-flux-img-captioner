@@ -5,8 +5,6 @@ import { generateText } from 'ai';
 import { Buffer } from 'buffer';
 import path from 'path';
 
-export const maxDuration = 60;
-
 const formatCaption = (caption: string, prefix: string, suffix: string): string => {
   // remove trailing comma from prefix
   const trimmedPrefix = prefix.trim().replace(/,$/, '');
