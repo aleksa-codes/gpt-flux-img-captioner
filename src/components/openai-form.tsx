@@ -48,7 +48,7 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
       systemMessage:
         'Generate a concise, yet detailed comma-separated caption. Do not use markdown. Do not have an intro or outro.',
       userPrompt: 'Describe this image, focusing on the main elements, style, and composition.',
-      model: 'gpt-4o-mini',
+      model: 'gpt-4.1-nano',
       detail: 'auto',
     },
   });
@@ -238,8 +238,9 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='gpt-4o-mini'>GPT-4o-mini (Faster/Cheaper)</SelectItem>
-                      <SelectItem value='gpt-4o'>GPT-4o (Better Quality)</SelectItem>
+                      <SelectItem value='gpt-4.1-nano'>GPT-4.1-nano (Faster/Cheaper)</SelectItem>
+                      <SelectItem value='gpt-4.1-mini'>GPT-4.1-mini (Balanced)</SelectItem>
+                      <SelectItem value='gpt-4.1'>GPT-4.1 (Better Quality)</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
