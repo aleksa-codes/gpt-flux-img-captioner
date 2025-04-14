@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2Icon, ImageIcon, FileTextIcon, InfoIcon } from 'lucide-react';
+import { Loader2Icon, ImageIcon, FileTextIcon, InfoIcon, KeyIcon } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Textarea } from '@/components/ui/textarea';
 import { ChevronDownIcon, ChevronUpIcon, WrenchIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import APIKeyManager from '@/components/api-key-manager';
 
 const openaiFormSchema = z.object({
   images: z.array(z.instanceof(File)).nonempty('At least one image is required.'),
@@ -29,16 +30,22 @@ const openaiFormSchema = z.object({
 type OpenAIFormValues = z.infer<typeof openaiFormSchema>;
 
 interface OpenAIFormProps {
-  apiKey: string | null;
+  initialApiKey: string | null;
+  onApiKeyChange: (key: string | null) => void;
   onSubmit: (captions: { filename: string; content: string }[]) => void;
-  onProgress: (caption: { filename: string; content: string }) => void; // New prop for real-time updates
+  onProgress: (caption: { filename: string; content: string }) => void;
   onError: (error: string) => void;
 }
 
-export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: OpenAIFormProps) {
+export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, onProgress, onError }: OpenAIFormProps) {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [captionCount, setCaptionCount] = useState(0); // Track number of processed captions
+  const [captionCount, setCaptionCount] = useState(0);
+  const [apiKey, setApiKey] = useState<string | null>(initialApiKey);
+
+  useEffect(() => {
+    onApiKeyChange(apiKey);
+  }, [apiKey, onApiKeyChange]);
 
   const form = useForm<OpenAIFormValues>({
     resolver: zodResolver(openaiFormSchema),
@@ -65,7 +72,7 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
     }
 
     setLoading(true);
-    setCaptionCount(0); // Reset caption count
+    setCaptionCount(0);
 
     const formData = new FormData();
     for (let i = 0; i < data.images.length; i++) {
@@ -113,10 +120,9 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
                 setLoading(false);
                 return;
               } else {
-                // Send each caption to the parent as it's received
                 const newCaption = { filename, content: caption };
                 tempCaptions.push(newCaption);
-                onProgress(newCaption); // Send real-time update to parent
+                onProgress(newCaption);
                 setCaptionCount((prev) => prev + 1);
               }
             }
@@ -137,7 +143,37 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
         <Card>
-          <CardContent className='pt-6'>
+          <CardHeader className='pb-0'>
+            <CardTitle className='flex items-center justify-between text-lg'>
+              <div />
+              <APIKeyManager onApiKeyChange={setApiKey} />
+            </CardTitle>
+          </CardHeader>
+          <CardContent className='pt-4'>
+            <div className='mb-4'>
+              <FormField
+                control={form.control}
+                name='model'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select model' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='gpt-4.1-nano'>GPT-4.1-nano (Faster/Cheaper)</SelectItem>
+                        <SelectItem value='gpt-4.1-mini'>GPT-4.1-mini (Balanced)</SelectItem>
+                        <SelectItem value='gpt-4.1'>GPT-4.1 (Better Quality)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name='images'
@@ -163,6 +199,15 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
                 </FormItem>
               )}
             />
+
+            {!apiKey && (
+              <Alert variant='destructive' className='mt-4'>
+                <AlertTitle className='flex items-center gap-2'>API Key Required</AlertTitle>
+                <AlertDescription>
+                  Please add your OpenAI API key using the &quot;Set API Key&quot; button above before proceeding.
+                </AlertDescription>
+              </Alert>
+            )}
 
             <div className='mt-4 flex flex-col gap-4 sm:flex-row'>
               <FormField
@@ -227,28 +272,6 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
 
             <FormField
               control={form.control}
-              name='model'
-              render={({ field }) => (
-                <FormItem className='mt-4'>
-                  <FormLabel>Model</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select model' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value='gpt-4.1-nano'>GPT-4.1-nano (Faster/Cheaper)</SelectItem>
-                      <SelectItem value='gpt-4.1-mini'>GPT-4.1-mini (Balanced)</SelectItem>
-                      <SelectItem value='gpt-4.1'>GPT-4.1 (Better Quality)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name='detail'
               render={({ field }) => (
                 <FormItem className='mt-4'>
@@ -283,15 +306,6 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
                 </FormItem>
               )}
             />
-
-            {!apiKey && (
-              <Alert variant='destructive' className='mt-4'>
-                <AlertTitle className='flex items-center gap-2'>API Key Required</AlertTitle>
-                <AlertDescription>
-                  Please add your OpenAI API key in the top right corner before proceeding.
-                </AlertDescription>
-              </Alert>
-            )}
 
             <Collapsible open={isOpen} onOpenChange={setIsOpen} className='mt-4'>
               <CollapsibleTrigger asChild>
@@ -391,7 +405,7 @@ export default function OpenAIForm({ apiKey, onSubmit, onProgress, onError }: Op
             </>
           ) : !apiKey ? (
             <>
-              <ImageIcon className='mr-2 h-5 w-5' />
+              <KeyIcon className='mr-2 h-5 w-5' />
               API Key Required
             </>
           ) : (
