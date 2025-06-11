@@ -2,7 +2,7 @@
 
 A web app that generates AI-powered image captions. Ideal for LoRA model training on platforms like [fal LoRA Trainer](https://fal.ai/models/fal-ai/flux-lora-fast-training) and [Replicate LoRA Trainer](https://replicate.com/ostris/flux-dev-lora-trainer/train).
 
-**[Live Demo](https://gptcaptioner.aleksa.io/)**
+**[Live Demo](https://gptcaptioner.aleksa.codes/)**
 
 ## ✨ Features
 
