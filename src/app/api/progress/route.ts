@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
       });
     }
-    client = createOpenAI({ apiKey, compatibility: 'strict' });
+    client = createOpenAI({ apiKey });
   }
 
   const stream = new ReadableStream({
