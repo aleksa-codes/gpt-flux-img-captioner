@@ -31,7 +31,7 @@ Next.js 14, Tailwind CSS, shadcn/ui, Lucide React, Vercel AI SDK
 ### Prerequisites
 
 - Node.js (v16+)
-- Yarn
+- Bun
 - OpenAI API key (if using OpenAI)
 - Ollama installed locally (if using local models)
 
@@ -43,10 +43,10 @@ git clone https://github.com/aleksa-codes/gpt-flux-img-captioner.git
 cd gpt-image-captioner
 
 # Install dependencies
-yarn install
+bun install
 
 # Start development server
-yarn dev
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
