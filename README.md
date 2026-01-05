@@ -8,6 +8,8 @@ A web app that generates AI-powered image captions. Ideal for LoRA model trainin
 
 - **Dual Model Support**: OpenAI API (GPT-5 series) or Ollama (local models)
 - **Batch Processing**: Upload and caption multiple images at once
+- **Image Preview**: Visual thumbnails of selected images before and after captioning
+- **Smart Validation**: Automatic file type (JPEG, PNG, WebP, GIF) and size validation (20MB max)
 - **Customization**: Add prefix/suffix to captions
 - **Export**: Download all captions as a ZIP file
 - **API Key Management**: Securely store OpenAI keys in-app
@@ -54,10 +56,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## 💡 Usage
 
 1. Choose between OpenAI or Ollama
-2. Upload one or more images
-3. Add optional prefix/suffix
-4. Generate captions
-5. Download as ZIP
+2. Upload one or more images (JPEG, PNG, WebP, or GIF - max 20MB each)
+3. Preview your selected images in a grid layout
+4. Add optional prefix/suffix to customize captions
+5. Generate captions (thumbnails appear alongside each caption)
+6. Download all captions as a ZIP file
+
+### Image Requirements
+
+- **Supported formats**: JPEG, PNG, WebP, GIF
+- **Maximum file size**: 20MB per image
+- **Multiple uploads**: Yes, batch processing supported
 
 ### Using Ollama
 
@@ -68,7 +77,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🤝 Contributing
 
-Contributions welcome! Fork the repo, create a feature branch, and submit a pull request.
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Development setup and workflow
+- Code style and standards
+- Submitting bug reports and feature requests
+- Pull request process
+
+Quick start: Fork the repo, create a feature branch, and submit a pull request.
 
 ## 📝 License
 

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2Icon, ImageIcon, FileTextIcon, InfoIcon, KeyIcon } from 'lucide-react';
+import { Loader2Icon, ImageIcon, FileTextIcon, InfoIcon, KeyIcon, XIcon } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,10 +15,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { ChevronDownIcon, ChevronUpIcon, WrenchIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import APIKeyManager from '@/components/api-key-manager';
 
+// Image validation constants
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
 const openaiFormSchema = z.object({
-  images: z.array(z.instanceof(File)).nonempty('At least one image is required.'),
+  images: z
+    .array(z.instanceof(File))
+    .nonempty('At least one image is required.')
+    .refine(
+      (files) => files.every((file) => file.size <= MAX_FILE_SIZE),
+      'Each image must be less than 20MB.'
+    )
+    .refine(
+      (files) => files.every((file) => ALLOWED_IMAGE_TYPES.includes(file.type)),
+      'Only JPEG, PNG, WebP, and GIF images are allowed.'
+    ),
   prefix: z.string().optional(),
   suffix: z.string().optional(),
   systemMessage: z.string().optional(),
@@ -35,17 +50,54 @@ interface OpenAIFormProps {
   onSubmit: (captions: { filename: string; content: string }[]) => void;
   onProgress: (caption: { filename: string; content: string }) => void;
   onError: (error: string) => void;
+  onImagesSelected: (files: File[]) => void;
 }
 
-export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, onProgress, onError }: OpenAIFormProps) {
+export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, onProgress, onError, onImagesSelected }: OpenAIFormProps) {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [captionCount, setCaptionCount] = useState(0);
   const [apiKey, setApiKey] = useState<string | null>(initialApiKey);
+  const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
 
   useEffect(() => {
     onApiKeyChange(apiKey);
   }, [apiKey, onApiKeyChange]);
+
+  // Cleanup image previews on unmount
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  }, [imagePreviews]);
+
+  const handleImageChange = (files: File[]) => {
+    // Revoke old previews
+    imagePreviews.forEach((img) => URL.revokeObjectURL(img.preview));
+
+    // Create new previews
+    const newPreviews = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImagePreviews(newPreviews);
+
+    // Notify parent component
+    onImagesSelected(files);
+  };
+
+  const removeImage = (index: number) => {
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    URL.revokeObjectURL(imagePreviews[index].preview);
+    setImagePreviews(newPreviews);
+
+    // Update form state
+    const newFiles = newPreviews.map((p) => p.file);
+    form.setValue('images', newFiles);
+
+    // Notify parent component
+    onImagesSelected(newFiles);
+  };
 
   const form = useForm<OpenAIFormValues>({
     resolver: zodResolver(openaiFormSchema),
@@ -192,6 +244,7 @@ export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, on
                       onChange={(e) => {
                         const files = e.target.files ? Array.from(e.target.files) : [];
                         field.onChange(files);
+                        handleImageChange(files);
                       }}
                     />
                   </FormControl>
@@ -199,6 +252,45 @@ export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, on
                 </FormItem>
               )}
             />
+
+            {/* Image Previews */}
+            {imagePreviews.length > 0 && (
+              <div className='mt-4'>
+                <div className='mb-2 flex items-center justify-between'>
+                  <p className='text-sm font-medium'>
+                    Selected Images ({imagePreviews.length})
+                  </p>
+                  <Badge variant='secondary'>
+                    {(imagePreviews.reduce((acc, img) => acc + img.file.size, 0) / (1024 * 1024)).toFixed(2)} MB
+                  </Badge>
+                </div>
+                <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'>
+                  {imagePreviews.map((img, index) => (
+                    <div key={index} className='group relative'>
+                      <div className='bg-muted aspect-square overflow-hidden rounded-lg border'>
+                        <img
+                          src={img.preview}
+                          alt={img.file.name}
+                          className='h-full w-full object-cover'
+                        />
+                      </div>
+                      <Button
+                        type='button'
+                        variant='destructive'
+                        size='icon'
+                        className='absolute -right-2 -top-2 h-6 w-6 rounded-full opacity-0 transition-opacity group-hover:opacity-100'
+                        onClick={() => removeImage(index)}
+                      >
+                        <XIcon className='h-4 w-4' />
+                      </Button>
+                      <p className='text-muted-foreground mt-1 truncate text-xs' title={img.file.name}>
+                        {img.file.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {!apiKey && (
               <Alert variant='destructive' className='mt-4'>

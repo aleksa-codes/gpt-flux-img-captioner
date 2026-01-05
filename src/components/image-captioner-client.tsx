@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DownloadIcon } from 'lucide-react';
 import { SiOpenai, SiOllama } from '@icons-pack/react-simple-icons';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -22,6 +22,21 @@ export default function ImageCaptionerClient({ initialApiKey }: ImageCaptionerCl
   const [apiKey, setApiKey] = useState<string | null>(initialApiKey);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'openai' | 'ollama'>('openai');
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<{ filename: string; preview: string }[]>([]);
+
+  const handleImagesSelected = (files: File[]) => {
+    // Cleanup old previews
+    imagePreviews.forEach((img) => URL.revokeObjectURL(img.preview));
+
+    // Create new previews
+    const newPreviews = files.map((file) => ({
+      filename: file.name,
+      preview: URL.createObjectURL(file),
+    }));
+    setImageFiles(files);
+    setImagePreviews(newPreviews);
+  };
 
   const handleCaptions = async (newCaptions: { filename: string; content: string }[]) => {
     await handleDownload(newCaptions);
@@ -59,7 +74,18 @@ export default function ImageCaptionerClient({ initialApiKey }: ImageCaptionerCl
     setCaptions([]);
     setDownloadUrl(null);
     setError(null);
+    // Clear image previews
+    imagePreviews.forEach((img) => URL.revokeObjectURL(img.preview));
+    setImagePreviews([]);
+    setImageFiles([]);
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((img) => URL.revokeObjectURL(img.preview));
+    };
+  }, [imagePreviews]);
 
   return (
     <>
@@ -81,11 +107,17 @@ export default function ImageCaptionerClient({ initialApiKey }: ImageCaptionerCl
             onSubmit={handleCaptions}
             onProgress={handleCaptionProgress}
             onError={handleError}
+            onImagesSelected={handleImagesSelected}
           />
         </TabsContent>
 
         <TabsContent value='ollama'>
-          <OllamaForm onSubmit={handleCaptions} onProgress={handleCaptionProgress} onError={handleError} />
+          <OllamaForm
+            onSubmit={handleCaptions}
+            onProgress={handleCaptionProgress}
+            onError={handleError}
+            onImagesSelected={handleImagesSelected}
+          />
         </TabsContent>
       </Tabs>
 
@@ -110,14 +142,30 @@ export default function ImageCaptionerClient({ initialApiKey }: ImageCaptionerCl
             </Button>
           </CardHeader>
           <CardContent>
-            <ScrollArea className='h-64 rounded-md border p-4'>
-              <ul className='space-y-3'>
-                {captions.map((caption, index) => (
-                  <li key={index} className='flex flex-col gap-1'>
-                    <span className='text-primary text-sm font-medium'>{caption.filename}</span>
-                    <span className='text-muted-foreground text-sm'>{caption.content}</span>
-                  </li>
-                ))}
+            <ScrollArea className='h-96 rounded-md border p-4'>
+              <ul className='space-y-4'>
+                {captions.map((caption, index) => {
+                  const imagePreview = imagePreviews.find((img) => img.filename === caption.filename);
+                  return (
+                    <li key={index} className='flex gap-3 rounded-lg border p-3'>
+                      {imagePreview && (
+                        <div className='bg-muted h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border'>
+                          <img
+                            src={imagePreview.preview}
+                            alt={caption.filename}
+                            className='h-full w-full object-cover'
+                          />
+                        </div>
+                      )}
+                      <div className='flex min-w-0 flex-1 flex-col gap-1'>
+                        <span className='text-primary truncate text-sm font-medium' title={caption.filename}>
+                          {caption.filename}
+                        </span>
+                        <span className='text-muted-foreground text-sm'>{caption.content}</span>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </ScrollArea>
           </CardContent>

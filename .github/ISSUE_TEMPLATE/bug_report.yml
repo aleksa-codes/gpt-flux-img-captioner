@@ -1,0 +1,109 @@
+name: Bug Report
+description: Report a bug or issue with GPT Image Captioner
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this bug! Please fill out the sections below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: When I try to upload images larger than 10MB...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Upload '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: The image should be uploaded and captioned successfully
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: An error message appeared saying...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: service
+    attributes:
+      label: Which service were you using?
+      options:
+        - OpenAI
+        - Ollama
+        - Both
+        - Not applicable
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using?
+      placeholder: Chrome 120.0.6099.109
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: Which OS are you using?
+      placeholder: macOS 14.1, Windows 11, Ubuntu 22.04
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version (if running locally)
+      description: Run `node --version` if applicable
+      placeholder: v20.10.0
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+      placeholder: Drag and drop images here or paste from clipboard
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: This only happens when using dark mode...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Browser Console Logs
+      description: If applicable, paste any relevant browser console errors
+      placeholder: |
+        Press F12 to open developer tools, go to Console tab, and copy any error messages
+      render: shell
