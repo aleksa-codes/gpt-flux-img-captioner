@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { DownloadIcon } from 'lucide-react';
-import { SiOpenai, SiOllama } from '@icons-pack/react-simple-icons';
+import { SiOpenai, SiOllama } from 'react-icons/si';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
