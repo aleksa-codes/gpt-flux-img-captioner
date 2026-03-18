@@ -55,7 +55,7 @@ export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, on
       systemMessage:
         'Generate a concise, yet detailed comma-separated caption. Do not use markdown. Do not have an intro or outro.',
       userPrompt: 'Describe this image, focusing on the main elements, style, and composition.',
-      model: 'gpt-5-nano',
+      model: 'gpt-5.4-nano',
       detail: 'auto',
     },
   });
@@ -164,9 +164,9 @@ export default function OpenAIForm({ initialApiKey, onApiKeyChange, onSubmit, on
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='gpt-5-nano'>GPT-5-nano (Faster/Cheaper)</SelectItem>
-                        <SelectItem value='gpt-5-mini'>GPT-5-mini (Balanced)</SelectItem>
-                        <SelectItem value='gpt-5'>GPT-5 (Better Quality)</SelectItem>
+                        <SelectItem value='gpt-5.4-nano'>GPT-5.4-nano (Faster/Cheaper)</SelectItem>
+                        <SelectItem value='gpt-5.4-mini'>GPT-5.4-mini (Balanced)</SelectItem>
+                        <SelectItem value='gpt-5.4'>GPT-5.4 (Better Quality)</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

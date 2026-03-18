@@ -6,7 +6,7 @@ A web app that generates AI-powered image captions. Ideal for LoRA model trainin
 
 ## ✨ Features
 
-- **Dual Model Support**: OpenAI API (GPT-5 series) or Ollama (local models)
+- **Dual Model Support**: OpenAI API (GPT-5.4 series) or Ollama (local models)
 - **Batch Processing**: Upload and caption multiple images at once
 - **Customization**: Add prefix/suffix to captions
 - **Export**: Download all captions as a ZIP file
@@ -14,7 +14,7 @@ A web app that generates AI-powered image captions. Ideal for LoRA model trainin
 
 ## 🧠 Model Options
 
-- **OpenAI**: GPT-5 (high-quality), GPT-5-mini (balanced), and GPT-5-nano (faster, cheaper)
+- **OpenAI**: GPT-5.4 (high-quality), GPT-5.4-mini (balanced), and GPT-5.4-nano (faster, cheaper)
 - **Ollama**: Local vision models (LLaVA, moondream, bakLLaVA), no API key needed
 
 > **Note**: When using the deployed web app with Ollama, you have several options:
